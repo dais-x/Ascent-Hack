@@ -5,6 +5,7 @@
         android:allowBackup="true"
         android:largeHeap="true"
         android:hardwareAccelerated="true"
+        android:forceDarkAllowed="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -17,6 +18,7 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"
+            android:forceDarkAllowed="false"
             android:exported="true">
 
             <intent-filter>
