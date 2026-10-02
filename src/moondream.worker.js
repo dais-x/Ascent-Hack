@@ -23,6 +23,11 @@ import {
 
 import { preprocessImage } from './preprocessImage.js';
 
+// Configure WASM and environment for stable Chromium Android WebView execution
+env.wasm.numThreads = 1; // Prevents pthread scheduling policy crashes (policy 1073741825) in Chromium Crashpad
+env.wasm.simd       = true;
+env.wasm.proxy      = false;
+
 const HF_MODEL_ID = 'Nagafi/moondream2-q4-onnx';
 const LOCAL_ROOT  = '/models/';
 const LOCAL_PROBE = `${LOCAL_ROOT}${HF_MODEL_ID}/config.json`;
@@ -42,6 +47,13 @@ async function localModelAvailable() {
 }
 
 async function detectDevice() {
+  // Mobile Android WebViews trigger Chromium Crashpad dumps under WebGPU shader compilation & multithreading
+  const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    post('debug', { message: 'Android WebView detected -> defaulting to WASM CPU (single-thread mode) for Crashpad stability.' });
+    return 'wasm';
+  }
+
   try {
     if (!navigator.gpu) return 'wasm';
     const adapter = await navigator.gpu.requestAdapter();
