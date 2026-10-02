@@ -93,22 +93,26 @@ function initWorker() {
 const memStatsEl = document.getElementById('mem-stats');
 
 function getMemInfo() {
+  let jsHeap = 0;
   if (performance && performance.memory) {
-    const used = formatBytes(performance.memory.usedJSHeapSize);
-    const total = formatBytes(performance.memory.totalJSHeapSize);
-    return `${used} / ${total}`;
+    jsHeap = performance.memory.usedJSHeapSize || 0;
   }
-  return null;
+
+  // Model weights on WebGPU / WASM buffer size when loaded
+  // ONNX Q4 model is ~2.11 GB (2,264,164,400 bytes)
+  const modelMemory = modelReady ? 2264164400 : totalLoaded;
+  const totalAllocated = jsHeap + modelMemory;
+
+  const usedStr = formatBytes(totalAllocated);
+  const heapStr = jsHeap > 0 ? ` (JS: ${formatBytes(jsHeap)})` : '';
+
+  return `${usedStr}${heapStr}`;
 }
 
 function updateMemStats() {
   if (!memStatsEl) return;
   const mem = getMemInfo();
-  if (mem) {
-    memStatsEl.textContent = `RAM: ${mem}`;
-  } else {
-    memStatsEl.textContent = `RAM: Active`;
-  }
+  memStatsEl.textContent = `RAM: ${mem}`;
 }
 
 setInterval(updateMemStats, 1000);
