@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moondream2 – Browser Vision AI</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>🌙 Moondream2 <span class="badge">Q4 ONNX</span></h1>
+        <p class="subtitle">Vision-Language Model running 100% in your browser · Powered by Transformers.js</p>
+      </header>
+
+      <div id="status-bar">
+        <div id="status-dot"></div>
+        <span id="status-text">Not loaded</span>
+      </div>
+
+      <section id="load-section">
+        <button id="load-btn">⚡ Load Model</button>
+        <p class="hint">First load downloads ~1.5 GB — subsequent runs use cache.</p>
+        <div id="progress-container" hidden>
+          <div id="progress-bar"><div id="progress-fill"></div></div>
+          <span id="progress-label">0%</span>
+        </div>
+        <div id="progress-log" hidden>
+          <div id="progress-log-inner"></div>
+        </div>
+      </section>
+
+      <section id="inference-section" hidden>
+        <div id="image-input-area">
+          <label for="image-upload" id="drop-zone">
+            <span id="drop-text">📁 Click or drop an image here</span>
+            <img id="preview" alt="Preview" hidden />
+          </label>
+          <input type="file" id="image-upload" accept="image/*" hidden />
+        </div>
+
+        <div id="question-area">
+          <input
+            type="text"
+            id="question-input"
+            placeholder="Ask something about the image…"
+            value="Describe this image."
+          />
+          <button id="run-btn" disabled>▶ Run</button>
+        </div>
+
+        <div id="output-area" hidden>
+          <h3>Answer</h3>
+          <p id="output-text"></p>
+          <span id="timing"></span>
+        </div>
+
+        <div id="debug-area">
+          <h3>🔬 Pipeline log</h3>
+          <pre id="debug-log"></pre>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
