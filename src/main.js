@@ -78,7 +78,9 @@ function initWorker() {
       case 'debug': {
         const debugLog = document.getElementById('debug-log');
         if (debugLog) {
-          debugLog.textContent += data.message + '\n';
+          const memStr = getMemInfo();
+          const prefix = memStr ? `[${memStr}] ` : '';
+          debugLog.textContent += prefix + data.message + '\n';
           debugLog.scrollTop = debugLog.scrollHeight;
         }
         break;
@@ -86,6 +88,31 @@ function initWorker() {
     }
   });
 }
+
+// ── Memory Stats Tracker ─────────────────────────────────────────────
+const memStatsEl = document.getElementById('mem-stats');
+
+function getMemInfo() {
+  if (performance && performance.memory) {
+    const used = formatBytes(performance.memory.usedJSHeapSize);
+    const total = formatBytes(performance.memory.totalJSHeapSize);
+    return `${used} / ${total}`;
+  }
+  return null;
+}
+
+function updateMemStats() {
+  if (!memStatsEl) return;
+  const mem = getMemInfo();
+  if (mem) {
+    memStatsEl.textContent = `RAM: ${mem}`;
+  } else {
+    memStatsEl.textContent = `RAM: Active`;
+  }
+}
+
+setInterval(updateMemStats, 1000);
+updateMemStats();
 
 // ── Helpers ─────────────────────────────────────────────────────────
 function setStatus(text, state = '') {
