@@ -30,3 +30,6 @@ public/models/
 android/.gradle
 android/app/build
 android/build
+
+# Gradle binary zip
+gradle-8.11.1-bin.zip
